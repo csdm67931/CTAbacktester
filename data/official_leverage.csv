@@ -1,0 +1,704 @@
+# source=https://cfmt.capitalfutures.com.tw/zh-TW/Product/Lever fetched_at=2026-11-09 23:59
+symbol,name,group,leverage,margin_pct
+AUDCAD,澳幣對加幣,外匯,20,5
+AUDJPY,澳幣對日圓,外匯,20,5
+AUDNZD,澳幣對紐幣,外匯,20,5
+AUDUSD,澳幣對美元,外匯,20,5
+CADJPY,加幣對日圓,外匯,30,3.33333333333333
+EURAUD,歐元對澳幣,外匯,20,5
+EURCAD,歐元對加幣,外匯,30,3.33333333333333
+EURCHF,歐元對瑞朗,外匯,20,5
+EURGBP,歐元對英鎊,外匯,30,3.33333333333333
+EURJPY,歐元對日圓,外匯,30,3.33333333333333
+EURNZD,歐元對紐幣,外匯,20,5
+EURUSD,歐元對美元,外匯,30,3.33333333333333
+GBPAUD,英鎊對澳幣,外匯,20,5
+GBPCAD,英鎊對加幣,外匯,30,3.33333333333333
+GBPJPY,英鎊對日圓,外匯,30,3.33333333333333
+GBPNZD,英鎊對紐幣,外匯,20,5
+GBPUSD,英鎊對美元,外匯,30,3.33333333333333
+NZDCAD,紐幣對加幣,外匯,20,5
+NZDJPY,紐幣對日圓,外匯,20,5
+NZDUSD,紐幣對美元,外匯,20,5
+USDCAD,美元對加幣,外匯,30,3.33333333333333
+USDCHF,美元對瑞郎,外匯,20,5
+USDCNH,美元對人民幣,外匯,20,5
+USDJPY,美元對日圓,外匯,30,3.33333333333333
+USDSEK,美元對瑞典幣,外匯,20,5
+USDSGD,美元對新加坡幣,外匯,20,5
+USDZAR,美元對南非幣,外匯,20,5
+USDMXN,美元對墨西哥幣﻿,外匯,20,5
+EURZAR,歐元對南非幣,外匯,20,5
+GBPCHF,英鎊對瑞郎,外匯,20,5
+XAUUSD,黃金,商品,20,5
+XAGUSD,白銀,商品,10,10
+XTIUSD,美國輕原油,商品,10,10
+XBRUSD,布蘭特原油,商品,10,10
+DJ30,道瓊指數,指數,20,5
+NDAQ100,納斯達克指數,指數,20,5
+SPX500,標普指數,指數,20,5
+DAX30,德國指數,指數,20,5
+JPN225,日經指數,指數,20,5
+HK50,恆生指數,指數,10,10
+A.US,安捷倫科技,美股,6.67,15
+A-1x.US,安捷倫科技,美股,1,100
+AA.US,美國鋁業,美股,2.5,40
+AA-1x.US,美國鋁業,美股,1,100
+AAL.US,美國航空集團,美股,6.67,15
+AAL-1x.US,美國航空集團,美股,1,100
+AAPL.US,蘋果,美股,10,10
+AAPL-1x.US,蘋果,美股,1,100
+ABBV.US,艾伯維藥品,美股,10,10
+ABBV-1x.US,艾伯維藥品,美股,1,100
+ABNB.US,愛彼迎,美股,2.5,40
+ABNB-1x.US,愛彼迎,美股,1,100
+ABT.US,亞培,美股,10,10
+ABT-1x.US,亞培,美股,1,100
+ACHR-1x.US,Archer Aviation,美股,1,100
+ADBE.US,奧多比系統,美股,10,10
+ADBE-1x.US,奧多比系統,美股,1,100
+ADI.US,亞德諾,美股,10,10
+ADI-1x.US,亞德諾,美股,1,100
+ADT.US,ADT保全,美股,2.5,40
+ADT-1x.US,ADT保全,美股,1,100
+AFRM.US,Affirm控股,美股,2.5,40
+AFRM-1x.US,Affirm控股,美股,1,100
+AGNC.US,AGNC投資,美股,4,25
+AGNC-1x.US,AGNC投資,美股,1,100
+AI.US,C3.ai,美股,2,50
+AI-1x.US,C3.ai,美股,1,100
+AIG.US,美國國際集團,美股,6.67,15
+AIG-1x.US,美國國際集團,美股,1,100
+ALAB.US,Astera Labs,美股,2.5,40
+ALAB-1x.US,Astera Labs,美股,1,100
+ALB.US,雅寶,美股,4,25
+ALB-1x.US,雅寶,美股,1,100
+AMAT.US,應用材料,美股,6.67,15
+AMAT-1x.US,應用材料,美股,1,100
+AMD.US,超微半導體,美股,6.67,15
+AMD-1x.US,超微半導體,美股,1,100
+AMGN.US,美國安進,美股,10,10
+AMGN-1x.US,美國安進,美股,1,100
+AMZN.US,亞馬遜,美股,10,10
+AMZN-1x.US,亞馬遜,美股,1,100
+ANET.US,Arista網路,美股,4,25
+ANET-1x.US,Arista網路,美股,1,100
+APA.US,阿帕契,美股,6.67,15
+APA-1x.US,阿帕契,美股,1,100
+APO.US,阿波羅全球管理,美股,4,25
+APO-1x.US,阿波羅全球管理,美股,1,100
+APP.US,AppLovin,美股,2.5,40
+APP-1x.US,AppLovin,美股,1,100
+ARM.US,安謀控股,美股,2.5,40
+ARM-1x.US,安謀控股,美股,1,100
+ASTS-1x.US,AST太空行動,美股,1,100
+AUR.US,Aurora自動駕駛技術,美股,4,25
+AUR-1x.US,Aurora自動駕駛技術,美股,1,100
+AVGO.US,博通,美股,5,20
+AVGO-1x.US,博通,美股,1,100
+AXP.US,美國運通,美股,10,10
+AXP-1x.US,美國運通,美股,1,100
+BA.US,波音,美股,10,10
+BA-1x.US,波音,美股,1,100
+BAC.US,美國銀行,美股,6.67,15
+BAC-1x.US,美國銀行,美股,1,100
+BBWI.US,Bath & Body Works,美股,5,20
+BBWI-1x.US,Bath & Body Works,美股,1,100
+BBY.US,百思買電器零售店,美股,6.67,15
+BBY-1x.US,百思買電器零售店,美股,1,100
+BE-1x.US,Bloom能源,美股,1,100
+BIIB.US,生物基因,美股,10,10
+BIIB-1x.US,生物基因,美股,1,100
+BKNG.US,繽客控股,美股,10,10
+BKNG-1x.US,繽客控股,美股,1,100
+BMY.US,必治妥施貴寶,美股,10,10
+BMY-1x.US,必治妥施貴寶,美股,1,100
+BRKb.US,波克夏,美股,10,10
+BRKb-1x.US,波克夏,美股,1,100
+BROS.US,荷蘭兄弟,美股,2.5,40
+BROS-1x.US,荷蘭兄弟,美股,1,100
+BSX.US,波士頓科學,美股,10,10
+BSX-1x.US,波士頓科學,美股,1,100
+BULL-1x.US,微牛,美股,1,100
+BX.US,黑石集團,美股,4,25
+BX-1x.US,黑石集團,美股,1,100
+C.US,花旗集團,美股,6.67,15
+C-1x.US,花旗集團,美股,1,100
+CARR.US,開利全球,美股,6.67,15
+CARR-1x.US,開利全球,美股,1,100
+CAT.US,卡特彼勒,美股,10,10
+CAT-1x.US,卡特彼勒,美股,1,100
+CAVA.US,CAVA集團,美股,2.5,40
+CAVA-1x.US,CAVA集團,美股,1,100
+CCL.US,嘉年華集團,美股,10,10
+CCL-1x.US,嘉年華集團,美股,1,100
+CDE.US,科爾黛倫礦業,美股,2.5,40
+CDE-1x.US,科爾黛倫礦業,美股,1,100
+CEG.US,星座能源,美股,6.67,15
+CEG-1x.US,星座能源,美股,1,100
+CELH.US,攝氏控股,美股,6.67,15
+CELH-1x.US,攝氏控股,美股,1,100
+CF.US,CF工業控股,美股,6.67,15
+CF-1x.US,CF工業控股,美股,1,100
+CHKP.US,Check Point軟體技術,美股,6.67,15
+CHKP-1x.US,Check Point軟體技術,美股,1,100
+CHWY-1x.US,Chewy,美股,1,100
+CIEN.US,Ciena,美股,6.67,15
+CIEN-1x.US,Ciena,美股,1,100
+CMCSA.US,康卡斯特,美股,10,10
+CMCSA-1x.US,康卡斯特,美股,1,100
+CMG.US,奇波雷墨西哥燒烤,美股,6.67,15
+CMG-1x.US,奇波雷墨西哥燒烤,美股,1,100
+CNC.US,Centene,美股,2.5,40
+CNC-1x.US,Centene,美股,1,100
+COF.US,第一資本,美股,5,20
+COF-1x.US,第一資本,美股,1,100
+COIN.US,Coinbase Global,美股,5,20
+COIN-1x.US,Coinbase Global,美股,1,100
+COP.US,康菲石油,美股,6.67,15
+COP-1x.US,康菲石油,美股,1,100
+COST.US,好市多,美股,10,10
+COST-1x.US,好市多,美股,1,100
+CPNG.US,酷澎,美股,2.5,40
+CPNG-1x.US,酷澎,美股,1,100
+CRDO.US,默升科技,美股,4,25
+CRDO-1x.US,默升科技,美股,1,100
+CRM.US,人力資源網,美股,6.67,15
+CRM-1x.US,人力資源網,美股,1,100
+CRUS.US,思睿邏輯,美股,4,25
+CRUS-1x.US,思睿邏輯,美股,1,100
+CRWD.US,Crowdstrike Hldgs,美股,5,20
+CRWD-1x.US,Crowdstrike Hldgs,美股,1,100
+CRWV.US,CoreWeave,美股,2.5,40
+CRWV-1x.US,CoreWeave,美股,1,100
+CSCO.US,思科系統,美股,10,10
+CSCO-1x.US,思科系統,美股,1,100
+CSX.US,CSX運輸,美股,5,20
+CSX-1x.US,CSX運輸,美股,1,100
+CVNA.US,卡爾瓦納,美股,2.5,40
+CVNA-1x.US,卡爾瓦納,美股,1,100
+CVS.US,CVS健康連鎖藥店,美股,10,10
+CVS-1x.US,CVS健康連鎖藥店,美股,1,100
+CVX.US,雪佛龍,美股,10,10
+CVX-1x.US,雪佛龍,美股,1,100
+DAL.US,達美航空,美股,6.67,15
+DAL-1x.US,達美航空,美股,1,100
+DASH.US,DoorDash,美股,2.5,40
+DASH-1x.US,DoorDash,美股,1,100
+DDOG.US,數據狗,美股,2.5,40
+DDOG-1x.US,數據狗,美股,1,100
+DE.US,迪爾,美股,10,10
+DE-1x.US,迪爾,美股,1,100
+DECK.US,德克斯戶外用品,美股,2.5,40
+DECK-1x.US,德克斯戶外用品,美股,1,100
+DELL.US,戴爾科技,美股,2.5,40
+DELL-1x.US,戴爾科技,美股,1,100
+DG.US,達樂,美股,5,20
+DG-1x.US,達樂,美股,1,100
+DHI.US,霍頓房屋,美股,4,25
+DHI-1x.US,霍頓房屋,美股,1,100
+DHR.US,丹納赫集團,美股,10,10
+DHR-1x.US,丹納赫集團,美股,1,100
+DIS.US,迪士尼,美股,10,10
+DIS-1x.US,迪士尼,美股,1,100
+DJT-1x.US,川普媒體與科技集團,美股,1,100
+DKNG.US,DraftKings,美股,4,25
+DKNG-1x.US,DraftKings,美股,1,100
+DLTR.US,錢樹商店,美股,10,10
+DLTR-1x.US,錢樹商店,美股,1,100
+DOCU.US,DocuSign,美股,6.67,15
+DOCU-1x.US,DocuSign,美股,1,100
+DOW.US,陶氏,美股,10,10
+DOW-1x.US,陶氏,美股,1,100
+DUOL.US,多鄰國,美股,2.5,40
+DUOL-1x.US,多鄰國,美股,1,100
+DVN.US,戴文能源,美股,6.67,15
+DVN-1x.US,戴文能源,美股,1,100
+EBAY.US,電子灣拍賣網站,美股,10,10
+EBAY-1x.US,電子灣拍賣網站,美股,1,100
+ELF.US,e.l.f.美妝,美股,2,50
+ELF-1x.US,e.l.f.美妝,美股,1,100
+ENPH.US,Enphase Energy,美股,4,25
+ENPH-1x.US,Enphase Energy,美股,1,100
+EOG.US,依歐格資源,美股,6.67,15
+EOG-1x.US,依歐格資源,美股,1,100
+EPD.US,企業產品合作夥伴,美股,6.67,15
+EPD-1x.US,企業產品合作夥伴,美股,1,100
+EQT.US,EQT能源,美股,4,25
+EQT-1x.US,EQT能源,美股,1,100
+ET.US,能源轉運,美股,6.67,15
+ET-1x.US,能源轉運,美股,1,100
+ETSY.US,Etsy,美股,5,20
+ETSY-1x.US,Etsy,美股,1,100
+EXPE.US,智遊網集團,美股,6.67,15
+EXPE-1x.US,智遊網集團,美股,1,100
+F.US,福特汽車,美股,10,10
+F-1x.US,福特汽車,美股,1,100
+FCX.US,自由港麥克莫蘭銅金,美股,6.67,15
+FCX-1x.US,自由港麥克莫蘭銅金,美股,1,100
+FDX.US,聯邦快遞,美股,10,10
+FDX-1x.US,聯邦快遞,美股,1,100
+FHN.US,第一地平線國家,美股,4,25
+FHN-1x.US,第一地平線國家,美股,1,100
+FITB.US,五三銀行,美股,2,50
+FITB-1x.US,五三銀行,美股,1,100
+FLEX.US,偉創力,美股,6.67,15
+FLEX-1x.US,偉創力,美股,1,100
+FLR.US,福陸,美股,4,25
+FLR-1x.US,福陸,美股,1,100
+FSLR.US,第一太陽能,美股,3.33,30
+FSLR-1x.US,第一太陽能,美股,1,100
+FTNT.US,Fortinet網路安全,美股,2.5,40
+FTNT-1x.US,Fortinet網路安全,美股,1,100
+GE.US,奇異公司,美股,10,10
+GE-1x.US,奇異公司,美股,1,100
+GEV.US,奇異全球服務,美股,6.67,15
+GEV-1x.US,奇異全球服務,美股,1,100
+GILD.US,吉利德科學,美股,10,10
+GILD-1x.US,吉利德科學,美股,1,100
+GLW.US,康寧,美股,10,10
+GLW-1x.US,康寧,美股,1,100
+GM.US,通用汽車,美股,10,10
+GM-1x.US,通用汽車,美股,1,100
+GME-1x.US,遊戲驛站,美股,1,100
+GOOG.US,字母控股-C股,美股,10,10
+GOOG-1x.US,字母控股-C股,美股,1,100
+GOOGL.US,字母控股-A股,美股,10,10
+GOOGL-1x.US,字母控股-A股,美股,1,100
+GPS.US,蓋璞(GAP),美股,6.67,15
+GPS-1x.US,蓋璞(GAP),美股,1,100
+GS.US,高盛集團,美股,6.67,15
+GS-1x.US,高盛集團,美股,1,100
+GTLB.US,GitLab,美股,3.33,30
+GTLB-1x.US,GitLab,美股,1,100
+HAL.US,哈里伯頓,美股,6.67,15
+HAL-1x.US,哈里伯頓,美股,1,100
+HAS.US,孩之寶,美股,10,10
+HAS-1x.US,孩之寶,美股,1,100
+HD.US,家得寶,美股,10,10
+HD-1x.US,家得寶,美股,1,100
+HIMS.US,Hims&Hers健康,美股,4,25
+HIMS-1x.US,Hims&Hers健康,美股,1,100
+HON.US,漢威聯合國際,美股,10,10
+HON-1x.US,漢威聯合國際,美股,1,100
+HOOD.US,羅賓漢市場,美股,2.5,40
+HOOD-1x.US,羅賓漢市場,美股,1,100
+HPE.US,慧與科技,美股,3.33,30
+HPE-1x.US,慧與科技,美股,1,100
+HPQ.US,惠普,美股,6.67,15
+HPQ-1x.US,惠普,美股,1,100
+IBKR.US,盈透證券,美股,5,20
+IBKR-1x.US,盈透證券,美股,1,100
+IBM.US,IBM國際商業機器,美股,10,10
+IBM-1x.US,IBM國際商業機器,美股,1,100
+INOD-1x.US,Innodata數據服務,美股,1,100
+INTC.US,英特爾,美股,6.67,15
+INTC-1x.US,英特爾,美股,1,100
+INTU.US,直覺,美股,10,10
+INTU-1x.US,直覺,美股,1,100
+IONQ-1x.US,IonQ量子運算,美股,1,100
+IOT.US,Samsara,美股,2.5,40
+IOT-1x.US,Samsara,美股,1,100
+IP.US,國際紙業,美股,10,10
+IP-1x.US,國際紙業,美股,1,100
+JBL.US,捷普科技,美股,6.67,15
+JBL-1x.US,捷普科技,美股,1,100
+JNJ.US,嬌生,美股,10,10
+JNJ-1x.US,嬌生,美股,1,100
+JOBY-1x.US,Joby Aviation,美股,1,100
+JPM.US,摩根大通銀行,美股,10,10
+JPM-1x.US,摩根大通銀行,美股,1,100
+KDP-1x.US,克里格胡椒博士,美股,1,100
+KHC.US,卡夫亨氏,美股,10,10
+KHC-1x.US,卡夫亨氏,美股,1,100
+KMI.US,金德摩根,美股,10,10
+KMI-1x.US,金德摩根,美股,1,100
+KO.US,可口可樂,美股,10,10
+KO-1x.US,可口可樂,美股,1,100
+KODK.US,伊士曼柯達,美股,6.67,15
+KODK-1x.US,伊士曼柯達,美股,1,100
+KR.US,克羅格,美股,10,10
+KR-1x.US,克羅格,美股,1,100
+KSS.US,柯爾百貨,美股,6.67,15
+KSS-1x.US,柯爾百貨,美股,1,100
+KTOS.US,克瑞拓斯安全防衛,美股,3.33,30
+KTOS-1x.US,克瑞拓斯安全防衛,美股,1,100
+LAC-1x.US,美洲鋰業,美股,1,100
+LCID.US,源捷,美股,2,50
+LCID-1x.US,源捷,美股,1,100
+LEN.US,萊納房屋,美股,4,25
+LEN-1x.US,萊納房屋,美股,1,100
+LLY.US,禮來,美股,10,10
+LLY-1x.US,禮來,美股,1,100
+LMT.US,洛克希德馬丁,美股,10,10
+LMT-1x.US,洛克希德馬丁,美股,1,100
+LOW.US,勞氏,美股,10,10
+LOW-1x.US,勞氏,美股,1,100
+LRCX.US,科林研發,美股,5,20
+LRCX-1x.US,科林研發,美股,1,100
+LULU.US,露露樂蒙,美股,6.67,15
+LULU-1x.US,露露樂蒙,美股,1,100
+LUMN.US,流明科技,美股,10,10
+LUMN-1x.US,流明科技,美股,1,100
+LUV.US,西南航空,美股,6.67,15
+LUV-1x.US,西南航空,美股,1,100
+LVS.US,拉斯維加斯金沙集團,美股,5,20
+LVS-1x.US,拉斯維加斯金沙集團,美股,1,100
+LYFT.US,Lyft,美股,2,50
+LYFT-1x.US,Lyft,美股,1,100
+MA.US,萬事達卡,美股,10,10
+MA-1x.US,萬事達卡,美股,1,100
+MARA-1x.US,MARA控股,美股,1,100
+MCD.US,麥當勞,美股,10,10
+MCD-1x.US,麥當勞,美股,1,100
+MDB.US,MongoDB,美股,2.5,40
+MDB-1x.US,MongoDB,美股,1,100
+MDT.US,美敦力,美股,10,10
+MDT-1x.US,美敦力,美股,1,100
+META.US,臉書,美股,10,10
+META-1x.US,臉書,美股,1,100
+MGM.US,MGM 美高梅國際酒店集團,美股,3.33,30
+MGM-1x.US,MGM 美高梅國際酒店集團,美股,1,100
+MMM.US,3M,美股,10,10
+MMM-1x.US,3M,美股,1,100
+MO.US,奧馳亞集團,美股,10,10
+MO-1x.US,奧馳亞集團,美股,1,100
+MOS.US,美盛,美股,6.67,15
+MOS-1x.US,美盛,美股,1,100
+MP.US,MP材料,美股,2.5,40
+MP-1x.US,MP材料,美股,1,100
+MPC.US,馬拉松石油,美股,6.67,15
+MPC-1x.US,馬拉松石油,美股,1,100
+MRK.US,默克藥廠/默沙東,美股,10,10
+MRK-1x.US,默克藥廠/默沙東,美股,1,100
+MRNA.US,莫德納,美股,2.5,40
+MRNA-1x.US,莫德納,美股,1,100
+MRVL.US,邁威科技,美股,5,20
+MRVL-1x.US,邁威科技,美股,1,100
+MS.US,摩根士丹利,美股,6.67,15
+MS-1x.US,摩根士丹利,美股,1,100
+MSFT.US,微軟,美股,10,10
+MSFT-1x.US,微軟,美股,1,100
+MSI.US,摩托羅拉解決方案,美股,10,10
+MSI-1x.US,摩托羅拉解決方案,美股,1,100
+MSTR.US,微策,美股,6.67,15
+MSTR-1x.US,微策,美股,1,100
+MU.US,美光科技,美股,6.67,15
+MU-1x.US,美光科技,美股,1,100
+NBIS.US,Nebius,美股,2,50
+NBIS-1x.US,Nebius,美股,1,100
+NCLH.US,挪威郵輪控股,美股,6.67,15
+NCLH-1x.US,挪威郵輪控股,美股,1,100
+NEE.US,NextEra能源,美股,10,10
+NEE-1x.US,NextEra能源,美股,1,100
+NEM.US,紐蒙特礦業,美股,10,10
+NEM-1x.US,紐蒙特礦業,美股,1,100
+NET.US,Cloudflare雲端安全,美股,4,25
+NET-1x.US,Cloudflare雲端安全,美股,1,100
+NFLX.US,網飛,美股,6.67,15
+NFLX-1x.US,網飛,美股,1,100
+NKE.US,耐吉,美股,10,10
+NKE-1x.US,耐吉,美股,1,100
+NLY.US,Annaly資本管理,美股,5,20
+NLY-1x.US,Annaly資本管理,美股,1,100
+NOW.US,ServiceNow,美股,6.67,15
+NOW-1x.US,ServiceNow,美股,1,100
+NUE.US,紐柯鋼鐵,美股,6.67,15
+NUE-1x.US,紐柯鋼鐵,美股,1,100
+NVDA.US,輝達,美股,6.67,15
+NVDA-1x.US,輝達,美股,1,100
+OKLO-1x.US,Oklo核能,美股,1,100
+OKTA.US,Okta公司,美股,5,20
+OKTA-1x.US,Okta公司,美股,1,100
+ON.US,安森美半導體,美股,2.5,40
+ON-1x.US,安森美半導體,美股,1,100
+ORCL.US,甲骨文,美股,10,10
+ORCL-1x.US,甲骨文,美股,1,100
+OXY.US,西方石油,美股,6.67,15
+OXY-1x.US,西方石油,美股,1,100
+PANW.US,帕洛阿爾托網路,美股,4,25
+PANW-1x.US,帕洛阿爾托網路,美股,1,100
+PATH.US,UiPath,美股,2.5,40
+PATH-1x.US,UiPath,美股,1,100
+PCG.US,太平洋煤電,美股,6.67,15
+PCG-1x.US,太平洋煤電,美股,1,100
+PDD.US,拼多多,美股,5,20
+PDD-1x.US,拼多多,美股,1,100
+PEP.US,百事可樂,美股,10,10
+PEP-1x.US,百事可樂,美股,1,100
+PFE.US,輝瑞藥廠,美股,10,10
+PFE-1x.US,輝瑞藥廠,美股,1,100
+PG.US,寶鹼,美股,10,10
+PG-1x.US,寶鹼,美股,1,100
+PINS-1x.US,Pinterest,美股,1,100
+PLTR.US,帕蘭提爾科技,美股,5,20
+PLTR-1x.US,帕蘭提爾科技,美股,1,100
+PTON.US,派樂騰,美股,5,20
+PTON-1x.US,派樂騰,美股,1,100
+PYPL.US,Paypal控股,美股,5,20
+PYPL-1x.US,Paypal控股,美股,1,100
+QBTS.US,D-Wave量子,美股,2.5,40
+QBTS-1x.US,D-Wave量子,美股,1,100
+QCOM.US,高通,美股,6.67,15
+QCOM-1x.US,高通,美股,1,100
+RBBN.US,Ribbon Communication,美股,6.67,15
+RBBN-1x.US,Ribbon Communication,美股,1,100
+RBLX.US,Roblox,美股,2.5,40
+RBLX-1x.US,Roblox,美股,1,100
+RCL.US,皇家加勒比海郵輪,美股,6.67,15
+RCL-1x.US,皇家加勒比海郵輪,美股,1,100
+RDDT.US,Reddit,美股,2.5,40
+RDDT-1x.US,Reddit,美股,1,100
+RGTI.US,Rigetti量子運算,美股,4,25
+RGTI-1x.US,Rigetti量子運算,美股,1,100
+RIVN.US,Rivian汽車,美股,2.5,40
+RIVN-1x.US,Rivian汽車,美股,1,100
+RKLB-1x.US,火箭實驗室,美股,1,100
+RKT.US,Rocket房貸,美股,2.5,40
+RKT-1x.US,Rocket房貸,美股,1,100
+RMBS.US,Rambus,美股,4,25
+RMBS-1x.US,Rambus,美股,1,100
+ROKU.US,Roku,美股,2.5,40
+ROKU-1x.US,Roku,美股,1,100
+RTX.US,雷神技術,美股,10,10
+RTX-1x.US,雷神技術,美股,1,100
+S.US,SentinelOne,美股,2.5,40
+S-1x.US,SentinelOne,美股,1,100
+SATS.US,EchoStar,美股,6.67,15
+SATS-1x.US,EchoStar,美股,1,100
+SBUX.US,星巴克,美股,10,10
+SBUX-1x.US,星巴克,美股,1,100
+SCHW.US,嘉信理財,美股,10,10
+SCHW-1x.US,嘉信理財,美股,1,100
+SHOP.US,Shopify,美股,5,20
+SHOP-1x.US,Shopify,美股,1,100
+SIRI.US,天狼星衛星廣播,美股,6.67,15
+SIRI-1x.US,天狼星衛星廣播,美股,1,100
+SLB.US,斯倫貝謝,美股,10,10
+SLB-1x.US,斯倫貝謝,美股,1,100
+SMCI.US,美超微電腦,美股,4,25
+SMCI-1x.US,美超微電腦,美股,1,100
+SMMT-1x.US,Summit治療,美股,1,100
+SMR-1x.US,NuScale小型核能,美股,1,100
+SNAP.US,Snap社交平台,美股,2.5,40
+SNAP-1x.US,Snap社交平台,美股,1,100
+SNDK.US,新帝,美股,3.33,30
+SNDK-1x.US,新帝,美股,1,100
+SNOW.US,Snowflake,美股,3.33,30
+SNOW-1x.US,Snowflake,美股,1,100
+SNPS.US,新思科技,美股,6.67,15
+SNPS-1x.US,新思科技,美股,1,100
+SOFI-1x.US,SoFi金融科技,美股,1,100
+SOUN.US,SoundHound AI,美股,4,25
+SOUN-1x.US,SoundHound AI,美股,1,100
+SPOT.US,Spotify Technology SA,美股,5,20
+SPOT-1x.US,Spotify Technology SA,美股,1,100
+STZ-1x.US,星座品牌,美股,1,100
+SYM-1x.US,Symbotic,美股,1,100
+T.US,AT&T,美股,10,10
+T-1x.US,AT&T,美股,1,100
+TEM.US,Tempus AI,美股,2.5,40
+TEM-1x.US,Tempus AI,美股,1,100
+TGT.US,目標百貨,美股,10,10
+TGT-1x.US,目標百貨,美股,1,100
+TJX.US,TJX,美股,10,10
+TJX-1x.US,TJX,美股,1,100
+TMO-1x.US,賽默飛世爾科技,美股,1,100
+TMUS.US,T-Mobile US,美股,10,10
+TMUS-1x.US,T-Mobile US,美股,1,100
+TOST.US,Toast,美股,2.5,40
+TOST-1x.US,Toast,美股,1,100
+TSLA.US,特斯拉汽車,美股,5,20
+TSLA-1x.US,特斯拉汽車,美股,1,100
+TSN.US,泰森食品,美股,10,10
+TSN-1x.US,泰森食品,美股,1,100
+TTD.US,Trade Desk廣告科技,美股,4,25
+TTD-1x.US,Trade Desk廣告科技,美股,1,100
+TWLO.US,Twilio雲端通訊,美股,2.5,40
+TWLO-1x.US,Twilio雲端通訊,美股,1,100
+TXN.US,德州儀器,美股,6.67,15
+TXN-1x.US,德州儀器,美股,1,100
+U.US,Unity遊戲引擎,美股,2.5,40
+U-1x.US,Unity遊戲引擎,美股,1,100
+UAL.US,聯合大陸控股,美股,6.67,15
+UAL-1x.US,聯合大陸控股,美股,1,100
+UBER.US,優步科技,美股,5,20
+UBER-1x.US,優步科技,美股,1,100
+UNH.US,聯合健康集團,美股,10,10
+UNH-1x.US,聯合健康集團,美股,1,100
+UPS.US,聯合包裹服務,美股,10,10
+UPS-1x.US,聯合包裹服務,美股,1,100
+UPST.US,新貴控股,美股,2.5,40
+UPST-1x.US,新貴控股,美股,1,100
+USB.US,美國合眾銀行,美股,5,20
+USB-1x.US,美國合眾銀行,美股,1,100
+V.US,威士卡,美股,10,10
+V-1x.US,威士卡,美股,1,100
+VG.US,Venture Global,美股,4,25
+VG-1x.US,Venture Global,美股,1,100
+VIAV.US,Viavi Solutions,美股,6.67,15
+VIAV-1x.US,Viavi Solutions,美股,1,100
+VLO.US,瓦勒羅能源,美股,6.67,15
+VLO-1x.US,瓦勒羅能源,美股,1,100
+VRSN.US,威瑞信,美股,6.67,15
+VRSN-1x.US,威瑞信,美股,1,100
+VRT.US,維諦控股,美股,4,25
+VRT-1x.US,維諦控股,美股,1,100
+VST.US,Vistra能源,美股,5,20
+VST-1x.US,Vistra能源,美股,1,100
+VZ.US,威訊通訊,美股,10,10
+VZ-1x.US,威訊通訊,美股,1,100
+W.US,Wayfair,美股,2.5,40
+W-1x.US,Wayfair,美股,1,100
+WDAY.US,Workday,美股,10,10
+WDAY-1x.US,Workday,美股,1,100
+WDC.US,威騰電子,美股,6.67,15
+WDC-1x.US,威騰電子,美股,1,100
+WFC.US,富國銀行集團,美股,10,10
+WFC-1x.US,富國銀行集團,美股,1,100
+WMB.US,威廉姆斯,美股,10,10
+WMB-1x.US,威廉姆斯,美股,1,100
+WMT.US,沃爾瑪,美股,10,10
+WMT-1x.US,沃爾瑪,美股,1,100
+WYNN.US,永利度假村,美股,4,25
+WYNN-1x.US,永利度假村,美股,1,100
+XOM.US,埃克森美孚石油,美股,10,10
+XOM-1x.US,埃克森美孚石油,美股,1,100
+XRX.US,全錄,美股,6.67,15
+XRX-1x.US,全錄,美股,1,100
+XYZ.US,Block,美股,4,25
+XYZ-1x.US,Block,美股,1,100
+ZM.US,Zoom,美股,5,20
+ZM-1x.US,Zoom,美股,1,100
+ZS-1x.US,Zscaler,美股,1,100
+ARKK.US,ARK創新主動型ETF,美股,3.33,30
+ARKK-1x.US,ARK創新主動型ETF,美股,1,100
+BBH.US,VanEck Vectors生技ETF,美股,6.67,15
+BBH-1x.US,VanEck Vectors生技ETF,美股,1,100
+DIA.US,SPDR DJ指數ETF,美股,6.67,15
+DIA-1x.US,SPDR DJ指數ETF,美股,1,100
+EEM.US,iShare MSCI新興市場ETF,美股,6.67,15
+EEM-1x.US,iShare MSCI新興市場ETF,美股,1,100
+EFA.US,iShares MSCI歐澳遠東ETF,美股,5,20
+EFA-1x.US,iShares MSCI歐澳遠東ETF,美股,1,100
+EWJ.US,iShares 日本指數ETF,美股,5,20
+EWJ-1x.US,iShares 日本指數ETF,美股,1,100
+EWZ.US,iShares MSCI巴西ETF,美股,3.33,30
+EWZ-1x.US,iShares MSCI巴西ETF,美股,1,100
+FXI.US,iShares 中國大型股ETF,美股,5,20
+FXI-1x.US,iShares 中國大型股ETF,美股,1,100
+GDX.US,VanEck 黃金礦商ETF,美股,6.67,15
+GDX-1x.US,VanEck 黃金礦商ETF,美股,1,100
+GLD.US,SPDR 黃金ETF,美股,5,20
+GLD-1x.US,SPDR 黃金ETF,美股,1,100
+HYG.US,iShares iBoxx高收益公司債ETF,美股,6.67,15
+HYG-1x.US,iShares iBoxx高收益公司債ETF,美股,1,100
+IAU.US,iShares 黃金信託ETF,美股,5,20
+IAU-1x.US,iShares 黃金信託ETF,美股,1,100
+IBB.US,iShares 生物科技指數ETF,美股,6.67,15
+IBB-1x.US,iShares 生物科技指數ETF,美股,1,100
+IEF.US,iShares 7-10年期美國公債ETF,美股,6.67,15
+IEF-1x.US,iShares 7-10年期美國公債ETF,美股,1,100
+IVV.US,iShares 核心標普500ETF,美股,5,20
+IVV-1x.US,iShares 核心標普500ETF,美股,1,100
+IWM.US,iShares Russell 2000 ETF,美股,6.67,15
+IWM-1x.US,iShares Russell 2000 ETF,美股,1,100
+IYR.US,iShares 美國房地產指數ETF,美股,6.67,15
+IYR-1x.US,iShares 美國房地產指數ETF,美股,1,100
+KRE.US,SPDR 標普地區銀行ETF,美股,5,20
+KRE-1x.US,SPDR 標普地區銀行ETF,美股,1,100
+KWEB.US,KraneShares 滬深中國網路ETF,美股,5,20
+KWEB-1x.US,KraneShares 滬深中國網路ETF,美股,1,100
+LQD.US,iShares iBoxx投資級公司債ETF,美股,6.67,15
+LQD-1x.US,iShares iBoxx投資級公司債ETF,美股,1,100
+NVDL-1x.US,GraniteShares 2倍做多NVDA主動型ETF,美股,1,100
+OIH.US,VanEck Vectors石油服務ETF,美股,6.67,15
+OIH-1x.US,VanEck Vectors石油服務ETF,美股,1,100
+QQQ.US,Invesco 納斯達克100指數ETF,美股,6.67,15
+QQQ-1x.US,Invesco 納斯達克100指數ETF,美股,1,100
+RSP.US,Invesco 標普500等權重ETF,美股,5,20
+RSP-1x.US,Invesco 標普500等權重ETF,美股,1,100
+SLV.US,iShares 白銀ETF,美股,4,25
+SLV-1x.US,iShares 白銀ETF,美股,1,100
+SMH.US,VanEck Vectors半導體ETF,美股,6.67,15
+SMH-1x.US,VanEck Vectors半導體ETF,美股,1,100
+SOXL-1x.US,Direxion 半導體槓桿3倍ETF,美股,1,100
+SOXS-1x.US,Direxion 半導體反向3倍ETF,美股,1,100
+SPXL-1x.US,Direxion 標普500槓桿3倍ETF,美股,1,100
+SPY.US,SPDR S&P500指數ETF,美股,6.67,15
+SPY-1x.US,SPDR S&P500指數ETF,美股,1,100
+SQQQ-1x.US,ProShares 3倍放空納斯達克指數ETF,美股,1,100
+TLT.US,iShares 20年+公債ETF,美股,6.67,15
+TLT-1x.US,iShares 20年+公債ETF,美股,1,100
+TMF-1x.US,Direxion 20年以上美債槓桿3倍ETF,美股,1,100
+TNA-1x.US,Direxion 小型股槓桿3倍ETF,美股,1,100
+TQQQ-1x.US,ProShares 3倍做多納斯達克指數ETF,美股,1,100
+TSLL-1x.US,Direxion 2倍做多特斯拉ETF,美股,1,100
+TZA-1x.US,Direxion 小型股反向3倍ETF,美股,1,100
+UPRO-1x.US,ProShares 標普500槓桿3倍ETF,美股,1,100
+UVIX-1x.US,VIX期貨槓桿2倍ETF,美股,1,100
+UVXY-1x.US,ProShares VIX短期期貨槓桿ETF,美股,1,100
+VIXY.US,ProShares VIX短期期貨 ETF,美股,3.33,30
+VIXY-1x.US,ProShares VIX短期期貨 ETF,美股,1,100
+XBI.US,SPDR 標普生物科技ETF,美股,3.33,30
+XBI-1x.US,SPDR 標普生物科技ETF,美股,1,100
+XHB.US,SPDR 標普房屋建築ETF,美股,5,20
+XHB-1x.US,SPDR 標普房屋建築ETF,美股,1,100
+XLB.US,SPDR 原物料類ETF,美股,6.67,15
+XLB-1x.US,SPDR 原物料類ETF,美股,1,100
+XLE.US,SPDR 能源類ETF,美股,6.67,15
+XLE-1x.US,SPDR 能源類ETF,美股,1,100
+XLF.US,SPDR 金融類ETF,美股,6.67,15
+XLF-1x.US,SPDR 金融類ETF,美股,1,100
+XLI.US,SPDR 工業板塊ETF,美股,5,20
+XLI-1x.US,SPDR 工業板塊ETF,美股,1,100
+XLK.US,SPDR 科技板塊ETF,美股,5,20
+XLK-1x.US,SPDR 科技板塊ETF,美股,1,100
+XLP.US,SPDR 必需消費品板塊ETF,美股,5,20
+XLP-1x.US,SPDR 必需消費品板塊ETF,美股,1,100
+XLU.US,SPDR 公用事業板塊ETF,美股,5,20
+XLU-1x.US,SPDR 公用事業板塊ETF,美股,1,100
+XLV.US,SPDR 醫療保健板塊ETF,美股,5,20
+XLV-1x.US,SPDR 醫療保健板塊ETF,美股,1,100
+XLY.US,SPDR 非必需消費類ETF,美股,6.67,15
+XLY-1x.US,SPDR 非必需消費類ETF,美股,1,100
+XRT.US,SPDR 標普零售ETF,美股,3.33,30
+XRT-1x.US,SPDR 標普零售ETF,美股,1,100
+00001.HK,長和,港股,10,10
+00005.HK,滙豐控股,港股,10,10
+00006.HK,電能實業,港股,10,10
+00016.HK,新鴻基地產,港股,10,10
+00017.HK,新世界發展,港股,6.67,15
+00019.HK,太古集團A股,港股,10,10
+00175.HK,吉利汽車,港股,6.67,15
+00267.HK,中信股份,港股,6.67,15
+00358.HK,江西銅業,港股,6.67,15
+00386.HK,中國石化,港股,10,10
+00388.HK,香港交易所,港股,10,10
+00688.HK,中國海外發展,港股,6.67,15
+00700.HK,騰訊控股,港股,10,10
+00857.HK,中國石油股份(H),港股,10,10
+00883.HK,中國海洋石油,港股,6.67,15
+00914.HK,海螺水泥,港股,6.67,15
+00939.HK,建設銀行(H),港股,10,10
+01044.HK,恆安國際,港股,10,10
+01088.HK,中國神華,港股,10,10
+01109.HK,華潤置地,港股,6.67,15
+01211.HK,比亞迪,港股,6.67,15
+01288.HK,農業銀行(H),港股,10,10
+01299.HK,友邦保險,港股,10,10
+01398.HK,中國工商銀行(H),港股,10,10
+01898.HK,中煤能源,港股,6.67,15
+02018.HK,瑞聲科技,港股,6.67,15
+02318.HK,中國平安(H),港股,6.67,15
+02319.HK,蒙牛乳業,港股,6.67,15
+02333.HK,長城汽車,港股,6.67,15
+02388.HK,中銀香港,港股,10,10
+02601.HK,中國太保,港股,10,10
+02628.HK,中國人壽(H),港股,10,10
+03323.HK,中國建材,港股,6.67,15
+03328.HK,交通銀行(H),港股,10,10
+03888.HK,金山軟件,港股,6.67,15
+03968.HK,招商銀行,港股,6.67,15
+03988.HK,中國銀行(H),港股,10,10
+06030.HK,中信證券(H),港股,6.67,15
