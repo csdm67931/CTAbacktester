@@ -1,5 +1,10 @@
-# 建置產物
-bin/
+# 建置產物：只收可直接執行的四個檔與第三方授權聲明，其餘（偵錯檔、執行時產生的檔）不進版控
+bin/*
+!bin/Backtester.exe
+!bin/BacktestWorker.exe
+!bin/CtaBacktest.dll
+!bin/Mono.Cecil.dll
+!bin/Mono.Cecil.LICENSE.txt
 
 # 自己匯出的歷史資料與自檢輸出不進版控
 samples/data/
