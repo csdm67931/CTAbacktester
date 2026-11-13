@@ -39,7 +39,8 @@ namespace CtaBacktest
         public double MinLot = 0.01, MaxLot = 0, LotStep = 0.01;
         public double TickSize = 0.00001;
         public int PriceDigits = 5;
-        public double StopOutPercent = 50;       // 保證金水位低於此 % 強制平倉（0 = 只在淨值 <= 0 時）
+        public double StopOutPercent = OfficialSpecs.StopOutPercent;   // 保證金維持率低於此 % 強制平倉（群益規定 50%；0 = 只在淨值 <= 0 時，測試用）
+        public string SpecMissing;               // 不是 null = 這個商品缺少哪一項規格（官方表與匯出檔都沒有），畫面要擋下回測
         public bool KeepLog = true;              // false = 不保留日誌（參數最佳化用，省記憶體；spec 12.3）
         public bool KeepCurve = true;            // false = 不保留資金曲線點（參數最佳化用；統計不受影響，spec 13.4）
 

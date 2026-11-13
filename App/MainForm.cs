@@ -62,21 +62,22 @@ namespace BacktesterApp
         private readonly ComboBox cbMode = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
         // 位數規則見 spec.md 6.3：整數欄 0 位，其他最多 2 位，不補零；匯率欄是貨幣對報價，位數依貨幣對
         private readonly NumericUpDown nuDeposit = Num(100, 100000000, 0, 1000);
-        private readonly NumericUpDown nuLeverage = Num(1, 3000, 2, 1);
-        private readonly NumericUpDown nuCommPct = Num(0, 10, 2, 0.01m);
-        private readonly NumericUpDown nuCommMin = Num(0, 1000, 2, 1);
         private readonly NumericUpDown nuSpread = Num(0, 100000, 0, 1);
-        private readonly NumericUpDown nuComm = Num(0, 10000, 2, 0.5m);
-        private readonly NumericUpDown nuContract = Num(1, 100000000, 0, 1);
         private readonly NumericUpDown nuFx = Num(0, 1000000, 5, 0.001m);
-        private readonly NumericUpDown nuMinLot = Num(0.01m, 1000, 2, 0.01m);
-        private readonly NumericUpDown nuLotStep = Num(0.01m, 1000, 2, 0.01m);
-        private readonly NumericUpDown nuStopOut = Num(0, 1000, 0, 10);
+        // 下面七欄是群益的規定（槓桿、手續費、合約規格、手數、強制平倉），只顯示、不能輸入，也不存進 last.txt（spec.md 6.6）
+        private readonly NumericUpDown nuLeverage = Fixed(Num(1, 3000, 2, 1));
+        private readonly NumericUpDown nuCommPct = Fixed(Num(0, 10, 2, 0.01m));
+        private readonly NumericUpDown nuCommMin = Fixed(Num(0, 1000, 2, 1));
+        private readonly NumericUpDown nuContract = Fixed(Num(1, 100000000, 0, 1));
+        private readonly NumericUpDown nuMinLot = Fixed(Num(0.01m, 1000, 2, 0.01m));
+        private readonly NumericUpDown nuLotStep = Fixed(Num(0.01m, 1000, 2, 0.01m));
+        private readonly NumericUpDown nuStopOut = Fixed(Num(0, 1000, 0, 10));
         private readonly Label lbFxInfo = new Label { AutoSize = true, ForeColor = Color.DimGray, Font = HelpFont, Margin = new Padding(6, 8, 0, 0) };
         private string fxPair, fxQuote, fxSource;   // 目前商品的換算貨幣對、報價幣別、自動報價來源
         private decimal fxAuto = -1;                // 自動算出的貨幣對報價；-1 = 沒有
         private readonly Label lbLevInfo = new Label { AutoSize = true, ForeColor = Color.DimGray, Font = HelpFont };
         private readonly NumericUpDown nuTimeout = Num(0, 3600, 0, 10);
+        private readonly ComboBox cbTimeView = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 260 };
         private readonly Label lbDllInfo = new Label { AutoSize = true, ForeColor = Color.FromArgb(154, 103, 0), Font = HelpFont, MaximumSize = new Size(640, 0), Visible = false };
         private string currentDll;   // 目前載入的策略 DLL（交給子程式）
         private volatile WorkerClient worker;   // 執行中的子程式（關閉視窗時結束它）
@@ -120,6 +121,7 @@ namespace BacktesterApp
         private List<StrategyInfo> strategies = new List<StrategyInfo>();
         private SymbolData symbol;
         private BacktestResult lastResult;
+        private bool savedDatesUtc;
         private volatile bool cancel;
         private bool loading;
 
@@ -146,6 +148,14 @@ namespace BacktesterApp
         private static NumericUpDown Num(decimal min, decimal max, int dec, decimal inc)
         {
             return new TrimNumericUpDown { Minimum = min, Maximum = max, DecimalPlaces = dec, Increment = inc, Width = 200, ThousandsSeparator = true, TextAlign = HorizontalAlignment.Right };
+        }
+
+        // 只顯示、不能輸入的數字欄（群益規定的值）
+        private static NumericUpDown Fixed(NumericUpDown n)
+        {
+            n.Enabled = false;
+            n.TabStop = false;
+            return n;
         }
 
         // 顯示時去掉多餘的 0（100,000、20、6.67），DecimalPlaces 仍決定最多幾位
@@ -274,6 +284,9 @@ namespace BacktesterApp
             Row(t, "交易王連線", Flow(btBridge, ckAutoBridge), "在交易王任一張圖掛「HistoryBridge」指標並保持開著；按「從交易王更新」會要這個商品的所選週期（M1 OHLC 模式另加 M1），只增不減", lbBridge);
             btBridge.Click += (s, e) => UpdateFromBridge(null);
             bridgeTimer.Tick += (s, e) => ShowBridgeState();
+            cbTimeView.Items.AddRange(new object[] { "台灣時間（UTC+8）", "UTC" });
+            cbTimeView.SelectedIndexChanged += (s, e) => ApplyTimeView();
+            Row(t, "時間顯示", cbTimeView, "畫面、K 線圖、報告的時間用哪個時區；開始、結束日期也照這個時區。資料與策略一律是 UTC，不受影響");
             Row(t, "開始日期", dtFrom, "開始日之前的 K 棒當作圖上既有歷史（暖機）");
             Row(t, "結束日期", dtTo, "含這一天", lbRange);
             lbMode = Row(t, "報價模式", cbMode, "");
@@ -281,21 +294,21 @@ namespace BacktesterApp
             Row(t, "初始資金（USD）", nuDeposit, "");
             var btLev = SmallButton("更新官方槓桿表");
             btLev.Click += (s, e) => UpdateLeverageTable(btLev);
-            Row(t, "槓桿（1:N）", Flow(nuLeverage, btLev), "預設依群益官網「全商品槓桿」表；群益有新商品時按右邊按鈕更新", lbLevInfo);
-            ShowLeverageInfo();
             lbSpreadInfo = Row(t, "點差（跳動點）", nuSpread, "");
             nuSpread.ValueChanged += (s, e) => ShowSpreadInfo();
-            Row(t, "手續費率（%）", nuCommPct, "名目金額的 %，買賣各收一次；預設用群益官方費率");
-            Row(t, "最低單筆手續費", nuCommMin, "群益個股最低 5 美元；外匯、商品、指數為 0");
-            Row(t, "每手固定手續費", nuComm, "群益不用這種收法，通常保持 0");
-            Section(t, "商品規格");
-            Row(t, "合約大小", nuContract, "1 手等於多少單位（例：外匯 100000、黃金 100）");
             Row(t, "匯率（換算成美元）", nuFx, "非美元報價的商品，自動取資料夾裡的貨幣對報價（例 USDJPY）；可自己改", lbFxInfo);
             nuFx.ValueChanged += (s, e) => ShowFxInfo();
+            Row(t, "", btDefaults, "把資金、點差、匯率與回測日期重設成這個商品的預設值", lbNotes);
+            // 這一區依商品自動帶出，換商品就跟著換，不能輸入（使用者 2026-11-13 指定）
+            Section(t, "群益交易規則（依商品自動帶出，不能修改）");
+            Row(t, "槓桿（1:N）", Flow(nuLeverage, btLev), "依群益官網「全商品槓桿」表；群益調整槓桿或新增商品時，按右邊按鈕更新", lbLevInfo);
+            ShowLeverageInfo();
+            Row(t, "合約大小", nuContract, "1 手等於多少單位（外匯 100,000、黃金 100 盎司、白銀 5,000 盎司、原油 1,000 桶、個股 1 股）");
             Row(t, "最小手數", nuMinLot, "");
             Row(t, "手數級距", nuLotStep, "");
-            Row(t, "強制平倉水位（%）", nuStopOut, "淨值 ÷ 已用保證金低於此值時全部平倉；0 = 只在淨值歸零時");
-            Row(t, "", btDefaults, "依商品資料重新填入上面的預設值", lbNotes);
+            Row(t, "手續費率（%）", nuCommPct, "名目金額的 %，買賣各收一次（外匯、商品 0；指數 0.01%；個股依市場）");
+            Row(t, "最低單筆手續費", nuCommMin, "群益個股最低 5 美元；外匯、商品、指數為 0");
+            Row(t, "強制平倉（%）", nuStopOut, "保證金維持率（淨值 ÷ 已用保證金）低於這個值時全部平倉；鎖倉時保證金取多空合計較大的一邊");
             pgSettings.Controls.Add(t);
             // 提醒條：最後加入的 Dock=Top 控制項排在最上面
             pgSettings.Controls.Add(lbBanner);
@@ -1422,6 +1435,10 @@ namespace BacktesterApp
             cbMode.SelectedIndex = Math.Max(0, Math.Min(2, GetInt("mode", 0)));
             ckAutoBridge.Checked = Get("autobridge", "0") == "1";
             nuTimeout.Value = Clamp(nuTimeout, GetDec("timeout", 60));
+            // 舊版設定沒有 timezone 鍵，存的開始／結束日期是 UTC 日期
+            savedDatesUtc = !saved.ContainsKey("timezone");
+            cbTimeView.SelectedIndex = Get("timezone", "tw") == "utc" ? 1 : 0;
+            TimeView.Taiwan = cbTimeView.SelectedIndex != 1;
             LoadOptSettings();
             RefreshFiles();
             loading = false;
@@ -1882,27 +1899,27 @@ namespace BacktesterApp
             }
             if (series.Count > 0)
             {
-                DateTime first = series.Bars[0].Time, last = series.Bars[series.Count - 1].Time;
-                lbRange.Text = string.Format("{0} 資料：{1:yyyy-MM-dd} 到 {2:yyyy-MM-dd}，共 {3:N0} 根", tf, first, last, series.Count);
                 var m1 = symbol.HasTimeframe("M1") ? symbol.Load("M1") : null;
                 bool hasM1 = m1 != null && m1.Count > 0;
-                if (hasM1) lbRange.Text += string.Format("\nM1 資料：{0:yyyy-MM-dd} 到 {1:yyyy-MM-dd}", m1.Bars[0].Time, m1.Bars[m1.Count - 1].Time);
-                else lbRange.Text += "\n沒有 M1 資料";
+                ShowRangeText();
                 lbMode.Text = hasM1 ? "M1 資料範圍以外的區間會自動改用本週期 OHLC" : "這個商品沒有 M1 資料，選 M1 模式時會自動改用本週期 OHLC";
                 lbMode.Visible = true;
                 dtFrom.MinDate = dtTo.MinDate = DateTimePicker.MinimumDateTime;
                 dtFrom.MaxDate = dtTo.MaxDate = DateTimePicker.MaximumDateTime;
             }
             bool keep = keepSaved && !force;
-            dtFrom.Value = keep ? GetDate("from", d.FromUtc) : d.FromUtc;
-            dtTo.Value = keep ? GetDate("to", d.ToUtc.AddDays(-1)) : d.ToUtc.AddDays(-1);
+            // 日期欄照顯示時區：結束日是最後一刻（不含的終點往前一點）落在顯示時區的哪一天
+            DateTime defFrom = TimeView.Show(d.FromUtc).Date, defTo = TimeView.Show(d.ToUtc.AddTicks(-1)).Date;
+            dtFrom.Value = keep ? GetDate("from", defFrom) : defFrom;
+            dtTo.Value = keep ? GetDate("to", defTo) : defTo;
+            // 舊版 UTC 日期換成台灣日期：開始日同一天，結束日（含當天到 24:00 UTC）落在台灣隔天
+            if (keep && savedDatesUtc && TimeView.Taiwan && saved.ContainsKey("to") && dtTo.Value.Date < DateTimePicker.MaximumDateTime.Date)
+                dtTo.Value = dtTo.Value.Date.AddDays(1);
+            savedDatesUtc = false;
             nuDeposit.Value = Clamp(nuDeposit, keep ? GetDec("deposit", (decimal)d.InitialDeposit) : (decimal)d.InitialDeposit);
-            nuLeverage.Value = Clamp(nuLeverage, keep ? GetDec("leverage", (decimal)d.Leverage) : (decimal)d.Leverage);
             nuSpread.Value = Clamp(nuSpread, keep ? GetDec("spread", (decimal)Math.Round(d.Spread / d.TickSize)) : (decimal)Math.Round(d.Spread / d.TickSize));
-            nuComm.Value = Clamp(nuComm, keep ? GetDec("comm", 0) : 0);
-            nuCommPct.Value = Clamp(nuCommPct, keep ? GetDec("commpct", (decimal)d.CommissionPercent) : (decimal)d.CommissionPercent);
-            nuCommMin.Value = Clamp(nuCommMin, keep ? GetDec("commmin", (decimal)d.CommissionMin) : (decimal)d.CommissionMin);
-            nuContract.Value = Clamp(nuContract, keep ? GetDec("contract", (decimal)d.ContractSize) : (decimal)d.ContractSize);
+            // 群益規定的欄位：一律用這個商品的官方值，不沿用上次存的（換商品後留下舊商品規格會讓手數與損益全錯）
+            ShowFixedSpecs(d);
             // 匯率欄填貨幣對報價；同一個貨幣對才沿用上次手動值
             fxPair = d.FxPair; fxQuote = d.QuoteCurrency; fxSource = d.FxSource;
             fxAuto = double.IsNaN(d.FxPairPrice) ? -1 : (decimal)d.FxPairPrice;
@@ -1918,9 +1935,6 @@ namespace BacktesterApp
                 nuFx.Value = Clamp(nuFx, keep && Get("fxpair", "") == fxPair ? GetDec("fxquote", def) : def);
             }
             ShowFxInfo();
-            nuMinLot.Value = Clamp(nuMinLot, keep ? GetDec("minlot", (decimal)d.MinLot) : (decimal)d.MinLot);
-            nuLotStep.Value = Clamp(nuLotStep, keep ? GetDec("lotstep", (decimal)d.LotStep) : (decimal)d.LotStep);
-            nuStopOut.Value = Clamp(nuStopOut, keep ? GetDec("stopout", (decimal)d.StopOutPercent) : (decimal)d.StopOutPercent);
             curTick = d.TickSize; curDigits = d.PriceDigits;
             curIsFx = symbol.Symbol.Length == 6 && symbol.Symbol.All(char.IsLetter);
             ShowSpreadInfo();
@@ -1934,6 +1948,45 @@ namespace BacktesterApp
             lbNotes.Text = info;
             ShowNotes(notes);
             if (fxPair != null && nuFx.Value <= 0) BeginInvokeSafe(AutoFetchFx);
+        }
+
+        // 把群益規定的值填進唯讀欄位（只供顯示；回測實際用的值由 BuildSettingsFromUi 重新向 Defaults 取）
+        private void ShowFixedSpecs(TesterSettings d)
+        {
+            nuLeverage.Value = Clamp(nuLeverage, (decimal)d.Leverage);
+            nuContract.Value = Clamp(nuContract, (decimal)d.ContractSize);
+            nuMinLot.Value = Clamp(nuMinLot, (decimal)d.MinLot);
+            nuLotStep.Value = Clamp(nuLotStep, (decimal)d.LotStep);
+            nuCommPct.Value = Clamp(nuCommPct, (decimal)d.CommissionPercent);
+            nuCommMin.Value = Clamp(nuCommMin, (decimal)d.CommissionMin);
+            nuStopOut.Value = Clamp(nuStopOut, (decimal)d.StopOutPercent);
+        }
+
+        // 資料範圍說明，日期照顯示時區（spec.md 15）
+        private void ShowRangeText()
+        {
+            if (symbol == null || cbTf.SelectedItem == null) return;
+            string tf = (string)cbTf.SelectedItem;
+            BarSeries series = symbol.Load(tf);
+            if (series.Count == 0) return;
+            DateTime first = series.Bars[0].Time, last = series.Bars[series.Count - 1].Time;
+            string text = string.Format("{0} 資料（{4}）：{1:yyyy-MM-dd} 到 {2:yyyy-MM-dd}，共 {3:N0} 根", tf, TimeView.Show(first), TimeView.Show(last), series.Count, TimeView.Label);
+            var m1 = symbol.HasTimeframe("M1") ? symbol.Load("M1") : null;
+            if (m1 != null && m1.Count > 0) text += string.Format("\nM1 資料：{0:yyyy-MM-dd} 到 {1:yyyy-MM-dd}", TimeView.Show(m1.Bars[0].Time), TimeView.Show(m1.Bars[m1.Count - 1].Time));
+            else text += "\n沒有 M1 資料";
+            lbRange.Text = text;
+        }
+
+        // 設定頁切換顯示時區：畫面上的時間全部重畫；日期欄的數字不動（照新時區解讀）
+        private void ApplyTimeView()
+        {
+            TimeView.Taiwan = cbTimeView.SelectedIndex != 1;
+            if (loading) return;
+            ShowRangeText();
+            RefreshBanner();
+            kchart.RefreshTimeView();
+            if (lastResult != null) browser.DocumentText = HtmlReport.Build(lastResult, false);
+            Refresh();
         }
 
         // 提醒條 = 商品設定的提醒 ＋ 回測期間內的資料缺口（改日期時重算缺口）
@@ -1960,12 +2013,12 @@ namespace BacktesterApp
             string tf = (string)cbTf.SelectedItem;
             BarSeries s = symbol.Load(tf);
             if (s.Count < 2) return null;
-            DateTime from = DateTime.SpecifyKind(dtFrom.Value.Date, DateTimeKind.Utc), to = DateTime.SpecifyKind(dtTo.Value.Date.AddDays(1), DateTimeKind.Utc);
+            DateTime from = TimeView.DateToUtc(dtFrom.Value), to = TimeView.DateToUtc(dtTo.Value.Date.AddDays(1));
             var gaps = DataQuality.FindGaps(s, from, to);
             if (gaps.Count == 0) return null;
-            var parts = gaps.Take(3).Select(g => string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MM-dd} → {1:yyyy-MM-dd}（{2:N0} 天）", g.From, g.To, g.Days));
+            var parts = gaps.Take(3).Select(g => string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MM-dd} → {1:yyyy-MM-dd}（{2:N0} 天）", TimeView.Show(g.From), TimeView.Show(g.To), g.Days));
             string list = string.Join("、", parts) + (gaps.Count > 3 ? " 等 " + gaps.Count + " 段" : "");
-            DateTime after = gaps[gaps.Count - 1].To.Date.AddDays(1);
+            DateTime after = TimeView.Show(gaps[gaps.Count - 1].To).Date.AddDays(1);
             return "回測期間內 " + tf + " 資料有缺口（超過 5 天沒有 K 棒）：" + list + "。缺口期間不會有交易，缺口前後的價差會當成一次跳空，持倉中的單可能用很差的價格停損。"
                  + "要避開就把開始日改到 " + after.ToString("yyyy-MM-dd") + " 以後；要補資料，在交易王對這個商品重新掛 HistoryExporter（v0.2 會自動補缺口）。";
         }
@@ -2032,10 +2085,11 @@ namespace BacktesterApp
         {
             bt.Enabled = false;
             lbLevInfo.Text = "正在從群益官網下載全商品槓桿表…";
-            // 更新前的預設槓桿：目前欄位等於它才自動換新值，使用者手動改過的不覆蓋
+            // 更新前的槓桿：更新後不同就告知並換成新值
             SymbolData sym = symbol;
             string tf = cbTf.SelectedItem as string;
-            decimal before = sym != null && tf != null ? Clamp(nuLeverage, (decimal)Defaults.For(sym, tf, null).Leverage) : -1;
+            // -1 = 沒有選商品；-2 = 這個商品原本缺規格（欄位上的槓桿只是占位值，不是真的舊值）
+            decimal before = sym == null || tf == null ? -1 : Defaults.For(sym, tf, null).SpecMissing != null ? -2 : nuLeverage.Value;
             Task.Run(() => LeverageTable.Update()).ContinueWith(task =>
             {
                 if (IsDisposed || !IsHandleCreated) return;
@@ -2060,16 +2114,22 @@ namespace BacktesterApp
                 // 只處理更新前選的同一個商品週期；期間換了商品就由 ApplyDefaults 依新表填
                 if (sym != null && sym == symbol && tf == (cbTf.SelectedItem as string))
                 {
-                    decimal lev = Clamp(nuLeverage, (decimal)Defaults.For(sym, tf, null).Leverage);
-                    if (lev != before)
+                    // 重新套用這個商品的規格與提醒（原本缺槓桿而被擋下的商品，更新後就能回測）
+                    var notes = new List<string>();
+                    TesterSettings d = Defaults.For(sym, tf, notes);
+                    ShowFixedSpecs(d);
+                    // 這個週期沒有資料時，提醒條正顯示「沒有資料」，不要蓋掉
+                    if (sym.Load(tf).Count > 0) ShowNotes(notes);
+                    decimal lev = nuLeverage.Value;
+                    if (before == -2 && d.SpecMissing == null)
                     {
                         sb.AppendLine();
-                        if (nuLeverage.Value == before)
-                        {
-                            sb.AppendLine("目前商品 " + sym.Symbol + " 的槓桿已從 " + before.ToString("0.##") + " 改為官方新值 " + lev.ToString("0.##") + "。");
-                            nuLeverage.Value = lev;
-                        }
-                        else sb.AppendLine("目前商品 " + sym.Symbol + " 的官方槓桿改為 " + lev.ToString("0.##") + "；你手動設的 " + nuLeverage.Value.ToString("0.##") + " 沒有改動。");
+                        sb.AppendLine("目前商品 " + sym.Symbol + " 已取得官方槓桿 " + lev.ToString("0.##") + "，現在可以回測。");
+                    }
+                    else if (before >= 0 && lev != before)
+                    {
+                        sb.AppendLine();
+                        sb.AppendLine("目前商品 " + sym.Symbol + " 的槓桿已從 " + before.ToString("0.##") + " 改為官方新值 " + lev.ToString("0.##") + "。");
                     }
                 }
                 MessageBox.Show(sb.ToString(), "更新官方槓桿表", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -2148,7 +2208,7 @@ namespace BacktesterApp
             var wc = new WorkerClient { TimeoutSeconds = (int)nuTimeout.Value };
             wc.Progress = p => SafeInvoke(() => progress.Value = Math.Max(0, Math.Min(1000, (int)(p * 1000))));
             worker = wc;
-            AppLog.Info("回測開始：" + Path.GetFileName(currentDll) + " " + info.Type.FullName + " " + symbol.Symbol + " " + s.Timeframe + " " + s.FromUtc.ToString("yyyy-MM-dd") + "～" + s.ToUtc.ToString("yyyy-MM-dd") + " 模式 " + s.Mode);
+            AppLog.Info("回測開始：" + Path.GetFileName(currentDll) + " " + info.Type.FullName + " " + symbol.Symbol + " " + s.Timeframe + " " + s.FromUtc.ToString("yyyy-MM-dd") + "～" + s.ToUtc.ToString("yyyy-MM-dd") + "（UTC）模式 " + s.Mode);
             Task.Run(() => wc.RunBacktest(job, () => cancel))
                 .ContinueWith(task =>
                 {
@@ -2176,17 +2236,19 @@ namespace BacktesterApp
         private TesterSettings BuildSettingsFromUi(out string blockReason)
         {
             blockReason = null;
+            // 槓桿、合約大小、手數、手續費、強制平倉一律用 Defaults 依商品給的群益官方值，不讀畫面欄位
             var s = Defaults.For(symbol, (string)cbTf.SelectedItem, null);
-            s.FromUtc = DateTime.SpecifyKind(dtFrom.Value.Date, DateTimeKind.Utc);
-            s.ToUtc = DateTime.SpecifyKind(dtTo.Value.Date.AddDays(1), DateTimeKind.Utc);
+            if (s.SpecMissing != null)
+            {
+                blockReason = "商品 " + symbol.Symbol + " 缺少規格：" + s.SpecMissing + "。\n\n群益官方表與交易王匯出檔都沒有這項資料，而這些規格不開放手動輸入，所以不能回測。\n\n請在設定頁按「更新官方槓桿表」，或在交易王重新匯出這個商品；仍然沒有的話，代表回測器還沒有支援這個商品。";
+                return null;
+            }
+            // 日期照顯示時區解讀（spec.md 15）：台灣時間 2024-01-01 = 2023-12-31 16:00 UTC
+            s.FromUtc = TimeView.DateToUtc(dtFrom.Value);
+            s.ToUtc = TimeView.DateToUtc(dtTo.Value.Date.AddDays(1));
             s.Mode = (TickMode)cbMode.SelectedIndex;
             s.InitialDeposit = (double)nuDeposit.Value;
-            s.Leverage = (double)nuLeverage.Value;
             s.Spread = (double)nuSpread.Value * s.TickSize;
-            s.CommissionPerLot = (double)nuComm.Value;
-            s.CommissionPercent = (double)nuCommPct.Value;
-            s.CommissionMin = (double)nuCommMin.Value;
-            s.ContractSize = (double)nuContract.Value;
             if (fxPair != null)
             {
                 if (nuFx.Value <= 0)
@@ -2198,9 +2260,6 @@ namespace BacktesterApp
                 s.FxRate = FxRates.RateFromPair(fxPair, fxQuote, s.FxPairPrice);
                 s.FxSource = nuFx.Value == fxAuto ? fxSource : "手動填寫";
             }
-            s.MinLot = (double)nuMinLot.Value;
-            s.LotStep = (double)nuLotStep.Value;
-            s.StopOutPercent = (double)nuStopOut.Value;
             return s;
         }
 
@@ -2314,16 +2373,17 @@ namespace BacktesterApp
                 saved["mode"] = cbMode.SelectedIndex.ToString(CultureInfo.InvariantCulture);
                 saved["autobridge"] = ckAutoBridge.Checked ? "1" : "0";
                 saved["timeout"] = Inv(nuTimeout.Value);
+                saved["timezone"] = cbTimeView.SelectedIndex == 1 ? "utc" : "tw";
                 // 沒有載入商品時，下面的欄位只是空白初值，不覆蓋上次存的設定
                 if (symbol != null)
                 {
                 saved["from"] = dtFrom.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                 saved["to"] = dtTo.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-                saved["deposit"] = Inv(nuDeposit.Value); saved["leverage"] = Inv(nuLeverage.Value); saved["spread"] = Inv(nuSpread.Value);
-                saved["comm"] = Inv(nuComm.Value); saved["commpct"] = Inv(nuCommPct.Value); saved["commmin"] = Inv(nuCommMin.Value); saved["contract"] = Inv(nuContract.Value);
+                saved["deposit"] = Inv(nuDeposit.Value); saved["spread"] = Inv(nuSpread.Value);
+                // 群益規定的欄位不存；舊版存過的也清掉，免得誤以為還有作用
+                foreach (string k in new[] { "leverage", "comm", "commpct", "commmin", "contract", "minlot", "lotstep", "stopout" }) saved.Remove(k);
                 // 只存手動填的匯率；自動值不存，下次開啟會取新匯出的報價
                 saved.Remove("fx"); saved["fxpair"] = fxPair ?? ""; saved["fxquote"] = nuFx.Value != fxAuto ? Inv(nuFx.Value) : "";
-                saved["minlot"] = Inv(nuMinLot.Value); saved["lotstep"] = Inv(nuLotStep.Value); saved["stopout"] = Inv(nuStopOut.Value);
                 }
                 SaveOptSettings();
                 Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
@@ -2428,7 +2488,7 @@ namespace BacktesterApp
                     {
                         DateTime td = t0.AddTicks((long)(span * d / (nDates - 1)));
                         float x = (float)(area.Left + (double)area.Width * d / (nDates - 1));
-                        string s = td.ToString("yyyy-MM-dd");
+                        string s = TimeView.Fmt(td, "yyyy-MM-dd");
                         var sz = g.MeasureString(s, font);
                         float tx = Math.Max(area.Left, Math.Min(area.Right - sz.Width, x - sz.Width / 2));
                         g.DrawLine(tickPen, x, area.Bottom, x, area.Bottom + 5 * k);

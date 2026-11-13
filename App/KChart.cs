@@ -73,7 +73,7 @@ namespace BacktesterApp
             navButtons.AddRange(new[] { btPrev, btNext, btFit });
             list.Columns.Add("#", 40, HorizontalAlignment.Right);
             list.Columns.Add("方向", 48);
-            list.Columns.Add("進場時間（UTC）", 150);
+            list.Columns.Add("進場（" + TimeView.Label + "）", 160);
             list.Columns.Add("手數", 60, HorizontalAlignment.Right);
             list.Columns.Add("價差", 80, HorizontalAlignment.Right);   // 順方向為正（spec.md K 線圖）
             list.Columns.Add("原因", 74);   // 和報告、README 同名
@@ -85,8 +85,8 @@ namespace BacktesterApp
             right.Controls.Add(bar);
             // 說明分兩段：上面是操作方式，下面是時區與價格說明（淡灰）
             var help = new Panel { Dock = DockStyle.Bottom, Height = 150, Padding = new Padding(4, 16, 4, 0) };   // 上方留白，清單最後半列不貼著說明
-            help.Controls.Add(new Label { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(140, 149, 159), Font = new Font("Microsoft JhengHei", 10f),
-                Text = "時間都是 UTC（台灣時間 = UTC + 8 小時）。\nK 棒是賣價；買單成交價含點差，可能略高於 K 棒。" });
+            tzNote = new Label { Dock = DockStyle.Fill, ForeColor = Color.FromArgb(140, 149, 159), Font = new Font("Microsoft JhengHei", 10f), Text = TzNoteText() };
+            help.Controls.Add(tzNote);
             help.Controls.Add(new Label { Dock = DockStyle.Top, Height = 78, ForeColor = ChartColors.Axis, Font = new Font("Microsoft JhengHei", 10.5f),
                 Text = "▲ 多進（買進開倉）　▼ 空進（賣出開倉）　⊗ 平倉（縮小時是小圓點）\n點一筆交易：圖會跳過去並畫出停損、停利\n滾輪縮放 ｜ 按住拖曳平移 ｜ ← → 換筆" });
             right.Controls.Add(help);
@@ -177,12 +177,11 @@ namespace BacktesterApp
                     bool part = !seenPos.Add(t.PositionId ?? ("#" + t.No));
                     double move = (t.ClosePrice - t.OpenPrice) * (t.IsLong ? 1 : -1);
                     var it = new ListViewItem(new[] { t.No.ToString(CultureInfo.InvariantCulture), (t.IsLong ? "買" : "賣") + (part ? "（部分）" : ""),
-                        t.OpenTime.ToString("yyyy-MM-dd HH:mm"), t.Volume.ToString("0.##", CultureInfo.InvariantCulture),
+                        "", t.Volume.ToString("0.##", CultureInfo.InvariantCulture),
                         move.ToString("+0.#####;-0.#####;0", CultureInfo.InvariantCulture), t.Reason ?? "", t.Profit.ToString("N2", CultureInfo.InvariantCulture) });
                     it.UseItemStyleForSubItems = false;
-                    // 滑鼠停在列上顯示出場時間與進出場價格（清單放不下第二個時間欄）
-                    it.ToolTipText = "進場 " + t.OpenTime.ToString("yyyy-MM-dd HH:mm") + " @" + t.OpenPrice.ToString("0.#####", CultureInfo.InvariantCulture)
-                        + "\n出場 " + t.CloseTime.ToString("yyyy-MM-dd HH:mm") + " @" + t.ClosePrice.ToString("0.#####", CultureInfo.InvariantCulture) + "（UTC）";
+                    it.Tag = t;
+                    SetItemTimes(it);
                     it.SubItems[1].ForeColor = t.IsLong ? ChartColors.Buy : ChartColors.Sell;
                     it.SubItems[4].ForeColor = move >= 0 ? ChartColors.Win : ChartColors.Loss;
                     it.SubItems[6].ForeColor = t.Profit >= 0 ? ChartColors.Win : ChartColors.Loss;
@@ -203,6 +202,35 @@ namespace BacktesterApp
             tbReplay.Maximum = Math.Max(1, cd == null ? 1 : cd.Bars.Count - 1);
             tbReplay.Value = 0;
             lbReplay.Text = can ? IdleHint : cd == null ? "" : "這次結果沒有資金曲線，不能回放";
+        }
+
+        // ---------------------------------------------------------------- 顯示時區（spec.md 15）
+        private Label tzNote;
+
+        private static string TzNoteText()
+        {
+            return (TimeView.Taiwan ? "時間都是台灣時間（UTC + 8 小時）。" : "時間都是 UTC（台灣時間 = UTC + 8 小時）。")
+                + "\nK 棒是賣價；買單成交價含點差，可能略高於 K 棒。";
+        }
+
+        // 清單的進場時間與提示（出場時間放提示裡，清單放不下第二個時間欄）
+        private static void SetItemTimes(ListViewItem it)
+        {
+            var t = (TradeRecord)it.Tag;
+            it.SubItems[2].Text = TimeView.Fmt(t.OpenTime, "yyyy-MM-dd HH:mm");
+            it.ToolTipText = "進場 " + TimeView.Fmt(t.OpenTime, "yyyy-MM-dd HH:mm") + " @" + t.OpenPrice.ToString("0.#####", CultureInfo.InvariantCulture)
+                + "\n出場 " + TimeView.Fmt(t.CloseTime, "yyyy-MM-dd HH:mm") + " @" + t.ClosePrice.ToString("0.#####", CultureInfo.InvariantCulture) + "（" + TimeView.Label + "）";
+        }
+
+        // 設定頁切換顯示時區後呼叫：清單、說明、圖都重畫，不重設回放與選取
+        public void RefreshTimeView()
+        {
+            list.Columns[2].Text = "進場（" + TimeView.Label + "）";
+            tzNote.Text = TzNoteText();
+            list.BeginUpdate();
+            foreach (ListViewItem it in list.Items) if (it.Tag is TradeRecord) SetItemTimes(it);
+            list.EndUpdate();
+            chart.Invalidate();
         }
 
         // ---------------------------------------------------------------- 回放（spec.md 14）
@@ -605,7 +633,7 @@ namespace BacktesterApp
                 foreach (int i in idx)
                 {
                     float x = X(i);
-                    DateTime t = data.Bars[i].Time;
+                    DateTime t = TimeView.Show(data.Bars[i].Time);
                     // 第一個刻度與跨年的刻度帶年份
                     string s = t.ToString((t.Year != lastYear ? "yyyy-" : "") + "MM-dd" + (showTime ? " HH:mm" : ""));
                     var sz = g.MeasureString(s, Font);
@@ -722,7 +750,7 @@ namespace BacktesterApp
             using (var f = new Font("Microsoft JhengHei", 11f))
             using (var mb = new SolidBrush(ChartColors.Axis))
             {
-                string head = data.Timeframe + "（UTC）　共 " + data.Bars.Count.ToString("N0") + " 根、" + data.Marks.Count + " 筆交易　";
+                string head = data.Timeframe + "（" + TimeView.Label + "）　共 " + data.Bars.Count.ToString("N0") + " 根、" + data.Marks.Count + " 筆交易　";
                 if (replaying) DrawReplayHead(g, f, plot, k, cur);
                 else if (sel >= 0)
                 {
@@ -753,7 +781,7 @@ namespace BacktesterApp
                 {
                     var b = data.Bars[hover];
                     string fmt = "N" + data.PriceDigits;
-                    string ohlc = b.Time.ToString("yyyy-MM-dd HH:mm") + " UTC　開 " + b.Open.ToString(fmt, CultureInfo.InvariantCulture) + "　高 " + b.High.ToString(fmt, CultureInfo.InvariantCulture)
+                    string ohlc = TimeView.Fmt(b.Time, "yyyy-MM-dd HH:mm") + " " + TimeView.Label + "　開 " + b.Open.ToString(fmt, CultureInfo.InvariantCulture) + "　高 " + b.High.ToString(fmt, CultureInfo.InvariantCulture)
                         + "　低 " + b.Low.ToString(fmt, CultureInfo.InvariantCulture) + "　收 " + b.Close.ToString(fmt, CultureInfo.InvariantCulture);
                     g.DrawString(ohlc, f, mb, plot.Left, 30 * k);
                     // 均線值接在後面，用各自的顏色（通道不寫，圖上看虛線即可）
@@ -876,7 +904,7 @@ namespace BacktesterApp
             double fl = eq - bal;
             var parts = new List<KeyValuePair<string, Color>>
             {
-                new KeyValuePair<string, Color>("回放 " + data.Bars[cur].Time.ToString("yyyy-MM-dd HH:mm") + " UTC　", Color.FromArgb(31, 41, 51)),
+                new KeyValuePair<string, Color>("回放 " + TimeView.Fmt(data.Bars[cur].Time, "yyyy-MM-dd HH:mm") + " " + TimeView.Label + "　", Color.FromArgb(31, 41, 51)),
                 new KeyValuePair<string, Color>("餘額 " + bal.ToString("N2", CultureInfo.InvariantCulture) + "　淨值 " + eq.ToString("N2", CultureInfo.InvariantCulture) + "　", Color.FromArgb(31, 41, 51)),
                 new KeyValuePair<string, Color>("浮動損益 " + (fl > 0 ? "+" : "") + fl.ToString("N2", CultureInfo.InvariantCulture) + "　", fl > 0 ? ChartColors.Win : fl < 0 ? ChartColors.Loss : ChartColors.Axis),
                 new KeyValuePair<string, Color>("持倉 " + openPos.Count + " 筆　已平倉 " + closed + " / " + data.Marks.Count + " 筆", ChartColors.Axis)

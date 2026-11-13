@@ -156,9 +156,25 @@ namespace CtaBacktest
             get { double e = Balance; foreach (Position p in positions) e += FloatingPnL(p); return e; }
         }
 
-        public double UsedMargin
+        // 同一商品多空並存（鎖倉）時，保證金取多方合計與空方合計的較大者（群益官網公告：
+        // 「同一商品 多空保證金取大值」，https://cfmt.capitalfutures.com.tw/zh-TW ，2026-11-13 讀取）
+        public double UsedMargin { get { return UsedMarginWith(true, 0); } }
+
+        private double UsedMarginWith(bool addLong, double addMargin)
         {
-            get { double m = 0; foreach (Position p in positions) m += Margin(p.OpenPrice, p.Quantity); return m; }
+            double lng = addLong ? addMargin : 0, sht = addLong ? 0 : addMargin;
+            foreach (Position p in positions)
+            {
+                double m = Margin(p.OpenPrice, p.Quantity);
+                if (p.Side == PositionSide.Long) lng += m; else sht += m;
+            }
+            return Math.Max(lng, sht);
+        }
+
+        // 新增這筆部位後，已用保證金會增加多少（反向鎖倉且不超過對邊時為 0）
+        private double MarginNeed(bool isLong, double price, double qty)
+        {
+            return UsedMarginWith(isLong, Margin(price, qty)) - UsedMargin;
         }
 
         public int OpenPositionCount { get { return positions.Count; } }
@@ -299,7 +315,7 @@ namespace CtaBacktest
             if (!ResolveSlTp(r.SLTPPriceType, isLong, price, r.StopLossPrice, r.TakeProfitPrice, out sl, out tp, out why)) return Reject(why);
             why = CheckSides(isLong, sl, tp);
             if (why != null) return Reject(why);
-            double need = Margin(price, r.Quantity);
+            double need = MarginNeed(isLong, price, r.Quantity);
             double free = Equity - UsedMargin;
             if (need > free + 1e-9) return Reject(string.Format(CultureInfo.InvariantCulture, "保證金不足：需要 {0:F2}，可用 {1:F2}", need, free));
 
@@ -542,7 +558,7 @@ namespace CtaBacktest
                     string why;
                     bool ok = ResolveSlTp(r.SLTPPriceType, isBuy, fillPrice, o.StopLossPrice ?? double.NaN, o.TakeProfitPrice ?? double.NaN, out sl, out tp, out why);
                     if (ok) why = CheckSides(isBuy, sl, tp);
-                    double need = Margin(fillPrice, o.Quantity);
+                    double need = MarginNeed(isBuy, fillPrice, o.Quantity);
                     if (ok && why == null && need > Equity - UsedMargin + 1e-9) why = "保證金不足";
                     if (!ok || why != null)
                     {
@@ -592,7 +608,7 @@ namespace CtaBacktest
             double used = UsedMargin;
             if (positions.Count > 0 && (eq <= 0 || (s.StopOutPercent > 0 && used > 0 && eq / used * 100 <= s.StopOutPercent)))
             {
-                tester.Log(string.Format(CultureInfo.InvariantCulture, "［強制平倉］淨值 {0:F2}，已用保證金 {1:F2}，保證金水位低於 {2}%", eq, used, s.StopOutPercent));
+                tester.Log(string.Format(CultureInfo.InvariantCulture, "［強制平倉］淨值 {0:F2}，已用保證金 {1:F2}，保證金維持率低於 {2}%（群益規定）", eq, used, s.StopOutPercent));
                 CloseAll("強制平倉");
                 if (Balance <= 0) StoppedOut = true;
             }

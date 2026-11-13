@@ -75,6 +75,11 @@ namespace CtaBacktest
 
         public const double StockMinFeeUsd = 5;
 
+        // 強制沖銷：盤中保證金維持率（權益數 ÷ 保證金）低於 50% 時公司有權不經通知平倉。
+        // 來源：官網「交易須知」https://cfmt.capitalfutures.com.tw/zh-TW/Client/Instruction （2026-11-13 讀取）。
+        // 這是群益的規定，不是使用者可以調整的設定。
+        public const double StopOutPercent = 50;
+
         // 交易王裡有報價、但不能交易的商品（使用者 2026-11-09 說明）
         public static readonly Dictionary<string, string> NonTradable = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {

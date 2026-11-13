@@ -428,6 +428,38 @@ namespace SelfTestNs
                 var t = runOne(dirs["XAUUSD"], 1);
                 Check("15a 黃金 1 手保證金 = 100x100/20", t != null && Near(lastMargin, 500), lastMargin.ToString());
                 Check("15b 黃金手續費 0", t != null && Near(t.Commission, 0), t == null ? "沒交易" : t.Commission.ToString());
+
+                // 鎖倉：同一商品多空並存，保證金取多空合計較大的一邊（群益公告）
+                ProbeStrategy.OnInit = null;
+                ProbeStrategy.OnUpdate = (st, a) =>
+                {
+                    if (a != TickStatus.IsBar || st.HistoryDataSeries.GetTimeUtc(0) != t0.AddHours(2)) return;
+                    st.OrdersManager.Send(new OrderRequest(OrderType.Market, st.InstrumentsManager.Current, st.AccountManager.Current, OrderSide.Buy, 1, null));
+                    st.OrdersManager.Send(new OrderRequest(OrderType.Market, st.InstrumentsManager.Current, st.AccountManager.Current, OrderSide.Sell, 1, null));
+                    st.OrdersManager.Send(new OrderRequest(OrderType.Market, st.InstrumentsManager.Current, st.AccountManager.Current, OrderSide.Sell, 0.5, null));
+                };
+                var hs = Settings(dirs["XAUUSD"], TickMode.BarOhlc);
+                hs.Spread = 0;
+                var hr = Tester.Run(dirs["XAUUSD"], typeof(ProbeStrategy), null, hs, null, null);
+                ProbeStrategy.OnUpdate = null;
+                Check("15g 鎖倉保證金取大值：多 1 手、空 1.5 手 = 750（不是 1250）", hr.Trades.Count == 3 && Near(hr.Broker.MaxMarginUsed, 750), hr.Trades.Count + " 筆 / " + hr.Broker.MaxMarginUsed);
+                // 資金 700：多 1 手用掉 500。再加多 1 手要再 500（拒絕）；反向空 1 手不增加保證金（接受）
+                int sent = 0;
+                bool sameSideRejected = false, hedgeAccepted = false;
+                ProbeStrategy.OnUpdate = (st, a) =>
+                {
+                    if (a != TickStatus.IsBar || st.HistoryDataSeries.GetTimeUtc(0) != t0.AddHours(2) || sent++ > 0) return;
+                    st.OrdersManager.Send(new OrderRequest(OrderType.Market, st.InstrumentsManager.Current, st.AccountManager.Current, OrderSide.Buy, 1, null));
+                    sameSideRejected = st.OrdersManager.Send(new OrderRequest(OrderType.Market, st.InstrumentsManager.Current, st.AccountManager.Current, OrderSide.Buy, 1, null)).HasError;
+                    hedgeAccepted = !st.OrdersManager.Send(new OrderRequest(OrderType.Market, st.InstrumentsManager.Current, st.AccountManager.Current, OrderSide.Sell, 1, null)).HasError;
+                };
+                var ms = Settings(dirs["XAUUSD"], TickMode.BarOhlc);
+                ms.Spread = 0;
+                ms.InitialDeposit = 700;
+                var mr = Tester.Run(dirs["XAUUSD"], typeof(ProbeStrategy), null, ms, null, null);
+                ProbeStrategy.OnUpdate = null;
+                Check("15i 保證金不足時同向加碼被拒、反向鎖倉可成交", sameSideRejected && hedgeAccepted && Near(mr.Broker.MaxMarginUsed, 500), sameSideRejected + " / " + hedgeAccepted + " / " + mr.Broker.MaxMarginUsed);
+                Check("15h 強制平倉水位預設 = 群益規定 50%", Near(hs.StopOutPercent, 50) && Near(OfficialSpecs.StopOutPercent, 50), hs.StopOutPercent.ToString());
             }
             if (dirs.ContainsKey("AAPL.US"))
             {
@@ -629,7 +661,15 @@ namespace SelfTestNs
                 File.WriteAllText(Path.Combine(dir, "symbol_info.txt"), "Symbol=QQQQ.US\r\nMinimalTickSize=0.001\r\n[SymbolInfo]\r\n所需保證金=25 %\r\n", Encoding.UTF8);
                 var notes = new List<string>();
                 var s = Defaults.For(SymbolData.Open(dir), "H1", notes);
-                Check("16j 表上沒有的商品：用匯出檔 25% = 4 倍並提醒更新", Near(s.Leverage, 4) && notes.Any(n => n.Contains("官方槓桿表裡沒有")), s.Leverage + " / " + string.Join(" ", notes));
+                Check("16j 表上沒有的商品：用匯出檔 25% = 4 倍並提醒更新", Near(s.Leverage, 4) && notes.Any(n => n.Contains("官方槓桿表裡沒有")) && s.SpecMissing == null, s.Leverage + " / " + string.Join(" ", notes));
+
+                // 官方表與匯出檔都沒有合約大小、槓桿：標記缺規格（畫面據此擋下回測，不讓使用者自己填）
+                string dir3 = Path.Combine(tmp, "LEV", "ZZZZZZ");
+                Directory.CreateDirectory(dir3);
+                File.WriteAllText(Path.Combine(dir3, "H1.csv"), "time_utc,open,high,low,close\r\n2026-01-01 00:00,1,1,1,1\r\n2026-01-01 01:00,1,1,1,1\r\n");
+                File.WriteAllText(Path.Combine(dir3, "symbol_info.txt"), "Symbol=ZZZZZZ\r\nMinimalTickSize=0.001\r\n[SymbolInfo]\r\n", Encoding.UTF8);
+                var s3 = Defaults.For(SymbolData.Open(dir3), "H1", null);
+                Check("16o 缺合約大小與槓桿的商品：標記缺規格", s3.SpecMissing != null && s3.SpecMissing.Contains("合約大小") && s3.SpecMissing.Contains("槓桿") && !s3.SpecMissing.Contains("跳動點"), s3.SpecMissing ?? "null");
             }
             finally { LeverageTable.FilePath = null; }
             FxTests(tmp);

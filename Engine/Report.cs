@@ -106,7 +106,8 @@ namespace CtaBacktest
             return v.ToString("#,0" + (d > 0 ? "." + new string('#', d) : ""), CultureInfo.InvariantCulture);
         }
         private static string H(string s) { return WebUtility.HtmlEncode(s ?? ""); }
-        private static string T(DateTime t) { return t.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture); }
+        // 報告裡的時間照顯示時區（spec.md 15）
+        private static string T(DateTime t) { return TimeView.Fmt(t, "yyyy-MM-dd HH:mm"); }
         private static string Pct(int a, int b) { return b > 0 ? " (" + P(100.0 * a / b) + ")" : ""; }
 
         public static string ModeText(TickMode m)
@@ -143,7 +144,7 @@ namespace CtaBacktest
 
             sb.Append("<h1>").Append(H(r.StrategyName)).Append(" 回測報告</h1><div class=\"sub\">")
               .Append(H(r.Symbol)).Append("　").Append(H(Timeframes.Label(s.Timeframe))).Append("　")
-              .Append(T(r.FirstBar)).Append(" 到 ").Append(T(r.LastBar)).Append("　")
+              .Append(T(r.FirstBar)).Append(" 到 ").Append(T(r.LastBar)).Append("（").Append(TimeView.Label).Append("）　")
               .Append(s.Mode == TickMode.M1Ohlc && r.BarsWithM1 == 0 && r.Bars > 0 ? ModeText(TickMode.BarOhlc) + "（沒有 M1 資料）" : ModeText(s.Mode))
               .Append("　耗時 ").Append(r.Elapsed.TotalSeconds < 0.1 ? "不到 0.1" : N(r.Elapsed.TotalSeconds, 1)).Append(" 秒</div>");
 
@@ -219,7 +220,7 @@ namespace CtaBacktest
             sb.Append("</table>");
 
             // 交易明細
-            sb.Append("<h2>交易明細（").Append(r.Trades.Count).Append(" 筆）</h2><table><tr><th>#</th><th>部位</th><th>方向</th><th class=\"num\">手數</th><th>進場時間（UTC）</th><th class=\"num\">進場價</th><th>出場時間（UTC）</th><th class=\"num\">出場價</th><th class=\"num\" title=\"平倉當下的停損；有移動停損時可能和進場時不同\">停損（平倉時）</th><th class=\"num\" title=\"平倉當下的停利\">停利（平倉時）</th><th title=\"策略平倉 = 策略程式自己下的平倉（不是被停損停利打到）\">原因</th><th class=\"num\">損益</th><th class=\"num\">餘額</th><th>備註</th></tr>");
+            sb.Append("<h2>交易明細（").Append(r.Trades.Count).Append(" 筆）</h2><table><tr><th>#</th><th>部位</th><th>方向</th><th class=\"num\">手數</th><th>進場時間（").Append(TimeView.Label).Append("）</th><th class=\"num\">進場價</th><th>出場時間（").Append(TimeView.Label).Append("）</th><th class=\"num\">出場價</th><th class=\"num\" title=\"平倉當下的停損；有移動停損時可能和進場時不同\">停損（平倉時）</th><th class=\"num\" title=\"平倉當下的停利\">停利（平倉時）</th><th title=\"策略平倉 = 策略程式自己下的平倉（不是被停損停利打到）\">原因</th><th class=\"num\">損益</th><th class=\"num\">餘額</th><th>備註</th></tr>");
             int dg = s.PriceDigits;
             foreach (var x in r.Trades)
             {

@@ -20,7 +20,7 @@ namespace CtaBacktest
         {
             bool hasOff = !double.IsNaN(official), hasExp = !double.IsNaN(exported) && exported > 0;
             if (hasOff && hasExp && Math.Abs(official - exported) > 1e-4 * Math.Abs(official) && notes != null)
-                notes.Add(string.Format(CultureInfo.InvariantCulture, "{0}：匯出檔是 {1}，群益官方表是 {2}，採用官方值；若官方已調整請改設定。", name, exported, official));
+                notes.Add(string.Format(CultureInfo.InvariantCulture, "{0}：匯出檔是 {1}，群益官方表是 {2}，採用官方值；若官方已調整，請更新回測器。", name, exported, official));
             return hasOff ? official : (hasExp ? exported : double.NaN);
         }
 
@@ -30,6 +30,13 @@ namespace CtaBacktest
             if (string.IsNullOrEmpty(symbol)) return false;
             int dot = symbol.LastIndexOf('.');
             return dot > 0 && dot >= symbol.Length - 3 && symbol.Length - dot - 1 == 2;
+        }
+
+        // 官方表與匯出檔都沒有這項規格：規格不開放手動輸入，所以記下來讓畫面擋下回測
+        private static void Missing(TesterSettings s, string what, List<string> notes)
+        {
+            s.SpecMissing = s.SpecMissing == null ? what : s.SpecMissing + "、" + what;
+            if (notes != null) notes.Add("這個商品沒有「" + what + "」的規格（群益官方表與交易王匯出檔都沒有），不能回測。請在設定頁按「更新官方槓桿表」，或從交易王重新匯出這個商品。");
         }
 
         // notes 收集需要提醒使用者的事（例如讀不到合約大小）
@@ -46,7 +53,7 @@ namespace CtaBacktest
             if (!(tick > 0) && SymbolData.ParseNumber(d.Info("最小價格跳動點", "Tick size"), out v) && v > 0) tick = v;
             tick = Pick(off == null ? double.NaN : off.TickSize, tick, "最小跳動點", notes);
             if (tick > 0) s.TickSize = tick;
-            else { s.TickSize = 0.00001; if (notes != null) notes.Add("讀不到最小跳動點，先用 0.00001，請確認。"); }
+            else { s.TickSize = 0.00001; Missing(s, "最小跳動點", notes); }
             s.PriceDigits = DigitsOf(s.TickSize);
 
             double ask = d.HeaderNumber("Ask"), bid = d.HeaderNumber("Bid");
@@ -55,14 +62,14 @@ namespace CtaBacktest
 
             double cs = Pick(off == null ? double.NaN : off.ContractSize, d.ContractSize, "合約大小", notes);
             if (cs > 0) s.ContractSize = cs;
-            else { s.ContractSize = 1; if (notes != null) notes.Add("讀不到合約大小，先用 1，請在設定裡填正確值，否則損益與手數會錯。"); }
+            else { s.ContractSize = 1; Missing(s, "合約大小", notes); }
 
             // 槓桿：群益「所需保證金」是名目金額的 %（EURUSD 3.33333 % = 30 倍，XAUUSD 5 % = 20 倍）
             double mg = double.NaN;
             if (SymbolData.ParseNumber(d.Info("所需保證金", "Margin"), out v) && v > 0 && v <= 100) mg = v;
             mg = Pick(off == null ? double.NaN : off.MarginPercent, mg, "保證金比例（%）", notes);
             if (mg > 0) s.Leverage = Math.Round(100.0 / mg, 2);
-            else { s.Leverage = 10; if (notes != null) notes.Add("讀不到這個商品的保證金比例，槓桿先用 1:10；請在設定頁按「更新官方槓桿表」，或依官網「全商品槓桿」表修改。"); }
+            else { s.Leverage = 10; Missing(s, "槓桿（保證金比例）", notes); }
             if (mg > 0 && !OfficialSpecs.LeverageFromTable(d.Symbol) && notes != null)
                 notes.Add("官方槓桿表裡沒有 " + d.Symbol + "，槓桿取自內建值或匯出檔；群益新增商品時請按「更新官方槓桿表」。");
 
@@ -72,7 +79,7 @@ namespace CtaBacktest
             fee = Pick(off == null ? double.NaN : off.FeePercent, fee, "手續費率（%）", notes);
             s.CommissionPercent = fee >= 0 ? fee : 0;
             if (double.IsNaN(fee) && off != null && off.Category != "外匯" && off.Category != "商品" && notes != null)
-                notes.Add("讀不到這個商品的手續費率，先用 0；請依群益官網「全商品費用」頁填寫（指數 0.01%）。");
+                notes.Add("讀不到這個商品的手續費率，先用 0；實際費率請看群益官網「全商品費用」頁。");
             if (IsStock(d.Symbol))
             {
                 bool us = d.Symbol.EndsWith(".US", StringComparison.OrdinalIgnoreCase);
