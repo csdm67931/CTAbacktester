@@ -5,7 +5,28 @@
 > **關於這個儲存庫**
 > - 這裡是回測器獨立出來的儲存庫，儲存庫根目錄就是原本的 `Backtester\` 資料夾。下文與 `spec.md` 裡寫 `Backtester\…` 的路徑，在這裡都從根目錄算起；`%USERPROFILE%\Documents\群益交易王CTA\Backtester` 請換成你放這個儲存庫的位置。
 > - 需要電腦已安裝群益交易王 CTA：建置借用它附的編譯器，策略也要先在它的 EvoCode 編譯。
+> - 向交易王取得歷史資料要用的四支指標放在這個儲存庫的 `Indicators\`（`HistoryBridge.cs`、`HistoryExporter.cs`、`ForexM1Batch.cs`、`HistoryProbe.cs`）。下文寫 `My scripts\Indicators\…` 的地方，是指把它們複製到交易王的指標資料夾之後的位置。
 > - 儲存庫不含任何行情資料。`samples\data\`（自檢用的範例 K 棒）與 `Tests\fixtures\` 裡的官網槓桿頁副本沒有放上來，所以 `selftest.cmd` 在全新取得的狀態下會有項目因缺資料而無法執行；一般回測用的資料請照下面的步驟從自己的交易王匯出。
+
+## 快速上手（第一次下載的人看這裡）
+
+前提：電腦已安裝群益交易王 CTA，而且可以登入看到報價。
+
+1. **下載**：在 GitHub 頁面按綠色的「Code」按鈕，選「Download ZIP」，解壓縮到任何資料夾（路徑可以有中文）。
+2. **建置回測器**：雙擊資料夾裡的 `build.cmd`。看到「建置完成」就會產生 `bin\Backtester.exe`。回測器正開著的時候不能建置，請先關掉。
+3. **放入資料指標**：把 `Indicators\` 裡的四個 `.cs` 檔複製到 `文件\群益交易王CTA\My scripts\Indicators\`。
+4. **編譯並掛上資料橋**：在交易王的 EvoCode 開啟 `HistoryBridge.cs` 按編譯（0 個錯誤就是成功），然後隨便開一張圖表加上指標「HistoryBridge」。圖左上角出現「資料橋運作中，請保持圖表開著」就好，這張圖不要關。
+5. **抓資料**：開啟 `bin\Backtester.exe`，設定頁「交易王連線」顯示綠色「已連線」後，在「商品」欄輸入代號（例 XAUUSD）、選週期，按「從交易王更新」。
+6. **回測**：策略先在 EvoCode 編譯（編譯後的檔案會出現在 `文件\群益交易王CTA\My scripts\bin\Strategies\`），回到回測器選那支策略，按綠色的「開始回測」。
+   - 想先試跑：把 `samples\strategies\SampleMaCross.cs` 複製到 `文件\群益交易王CTA\My scripts\Macroses\`，在 EvoCode 編譯後就能選它。
+
+常見狀況：
+
+- 0 筆交易：先看「日誌」分頁，策略放棄進場的原因會寫在那裡。也請確認設定頁下方的合約大小與槓桿是這個商品的值（黃金 100 與 20、外匯 100000、原油 1000）。
+- 「未連線」：交易王沒開，或沒有任何圖表掛著 HistoryBridge。
+- `selftest.cmd` 是開發用的自檢，這個儲存庫沒有附它需要的範例資料，不用執行。
+
+各步驟的細節與其他功能見下面各節。
 
 ## 第一次使用：三步
 
